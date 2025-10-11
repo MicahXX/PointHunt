@@ -46,6 +46,12 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'plugin.yml'
+    }
+
     def props = [version: version]
     inputs.properties props
     filteringCharset 'UTF-8'
@@ -53,3 +59,5 @@ processResources {
         expand props
     }
 }
+
+
