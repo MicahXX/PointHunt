@@ -1,0 +1,29 @@
+name: PointHunt
+version: '1.0-SNAPSHOT'
+main: me.micahcode.pointHunt.handlers.PointHunt
+api-version: '1.21'
+authors: [ MicahCode ]
+description: PointHunt
+website: https://micahcode.com/
+commands:
+  hunt:
+    description: Main command for Rank Hunt
+    usage: /hunt [top <page>|set <player> <points>|reset]
+    aliases: [rh]
+permissions:
+  pointhunt.setPoints:
+    description: Allows setting points for a player.
+    default: op
+  pointhunt.resetPoints:
+    description: Allows resetting the leaderboard.
+    default: op
+  pointhunt.setTimer:
+    description: Allows setting/resuming the timer.
+    default: op
+  pointhunt.cancelTimer:
+    description: cancels the timer
+    default: op
+  pointhunt.resumeTimer:
+    description: resume the timer
+    default: op
+
