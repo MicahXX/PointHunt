@@ -62,13 +62,9 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 - `/hunt cancelTimer` - Cancels the timer and removes it.
 - `/hunt stopTimer` - Stops the game and limits the ability to earn points.
 
-## Configuration (overview)
+## Configuration 
 - On first run, a configuration file will be created in `plugins/PointHunt/`.
-- Typical settings you may find or want to change:
-  - point values for specific blocks and mobs
-  - timer defaults
-  - automatic shutdown enable/disable
-  - leaderboard size
+- In Progress...
 - Edit the config and restart the server to apply changes.
 
 ## Troubleshooting
