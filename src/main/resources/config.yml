@@ -8,13 +8,14 @@ settings:
   action-bar-enabled: true      # show action bar updates
   update-interval-ticks: 1      # action bar and timer task interval in ticks
   save-interval-seconds: 300    # automatic save interval
-  shutdown-on-end: true
+  shutdown-on-end: true         # default
   end-top-count: 5              # how many top players to show at match end
 
-timer:
-  default-duration: "30m"
 
-points: {}
+timer:
+  default-duration: "30m"       # I dont think this works
+
+points: {}                      # shows Points of users (UUID)
 
 # override or add mob point values
 mob-points:
