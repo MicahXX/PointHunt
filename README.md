@@ -22,7 +22,7 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 ## Features
 - Earn points by mining blocks and killing mobs
 - In-game leaderboard to show top players
-- Configurable settings like Points gained.
+- Configurable settings like Points gained
 - Automatic server shutdown when the timer reaches zero
 
 ## Requirements
