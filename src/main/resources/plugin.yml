@@ -8,14 +8,9 @@ website: https://micahcode.com/
 commands:
   hunt:
     description: Main command for Rank Hunt
-    usage: /hunt [top <page>|set <player> <points>|reset|reload]
+    usage: /hunt [top <page>|set <player> <points>|reset]
     aliases: [rh]
-    permission: pointhunt.use
-    permission-message: "&cYou don't have permission to use that command."
 permissions:
-  pointhunt.use:
-    description: Allows use of /hunt (basic commands, viewing)
-    default: true
   pointhunt.setPoints:
     description: Allows setting points for a player.
     default: op
@@ -31,6 +26,4 @@ permissions:
   pointhunt.resumeTimer:
     description: resume the timer
     default: op
-  pointhunt.admin.reload:
-    description: Allows reloading the PointHunt configuration (reloads config and mappings)
-    default: op
+

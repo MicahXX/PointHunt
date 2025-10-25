@@ -80,12 +80,11 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            // Update in-memory
             listener.getAllPoints().put(target.getUniqueId(), points);
-            plugin.getConfig().set("points." + target.getUniqueId().toString(), points);
+            plugin.getConfig().set("setPoints." + target.getUniqueId(), points);
             plugin.saveConfig();
 
-            sender.sendMessage(Component.text("§aSet " + (target.getName() != null ? target.getName() : target.getUniqueId().toString()) + "’s points to §e" + points + "§a!"));
+            sender.sendMessage(Component.text("§aSet " + target.getName() + "’s points to §e" + points + "§a!"));
             return true;
         }
 
@@ -96,8 +95,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
             }
 
             listener.getAllPoints().clear();
-            // Clear saved points in config so save/load won't restore them
-            plugin.getConfig().set("points", null);
+            plugin.getConfig().set("resetPoints", null);
             plugin.saveConfig();
 
             Bukkit.broadcast(Component.text("§c§lThe Point Hunt leaderboard has been reset!"));
@@ -170,19 +168,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission("pointhunt.admin.reload")) {
-                sender.sendMessage("§cYou don't have permission to reload the configuration!");
-                return true;
-            }
-            // Reload config from disk and reapply mappings
-            plugin.reloadConfig();
-            listener.reloadMappingsFromConfig();
-            sender.sendMessage(Component.text("§aPointHunt configuration reloaded."));
-            return true;
-        }
-
-        sender.sendMessage("§cUsage: /hunt [top <page>|setPoints <player> <points>|resetPoints|setTimer <time>|cancelTimer|pauseTimer|resumeTimer|reload]");
+        sender.sendMessage("§cUsage: /hunt [top <page>|setPoints <player> <points>|resetPoints|setTimer <time>|cancelTimer|pauseTimer|resumeTimer]");
         return true;
     }
 
@@ -199,7 +185,6 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
                 subs.add("resumeTimer");
             }
             if (sender.hasPermission("pointhunt.cancelTimer")) subs.add("cancelTimer");
-            if (sender.hasPermission("pointhunt.admin.reload")) subs.add("reload");
             return subs;
         }
         return Collections.emptyList();

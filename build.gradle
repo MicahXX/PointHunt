@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.micahcode'
-version = '2.0'
+version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -46,23 +46,15 @@ processResources {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from(sourceSets.main.resources.srcDirs) {
-        include '**/*.yml'
-        filteringCharset = 'UTF-8'
+        include 'plugin.yml'
     }
 
-    // Only expand variables in plugin.yml, not config.yml
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
-        expand(version: project.version)
-    }
-
-    // Ensure config.yml is copied as raw text
-    filesMatching('config.yml') {
-        filter { line -> line } // no expansion, just copy as-is
+        expand props
     }
 }
-
-
-
-
 
 
