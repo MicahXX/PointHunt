@@ -1,5 +1,5 @@
 name: PointHunt
-version: '1.0-SNAPSHOT'
+version: '2.0'
 main: me.micahcode.pointHunt.handlers.PointHunt
 api-version: '1.21'
 authors: [ MicahCode ]
