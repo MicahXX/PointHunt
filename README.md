@@ -55,8 +55,8 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 - The game will track points while the timer runs, show leaderboard entries, and shut down the server when time runs out.
 
 ## Commands
-- `/hunt` — Show help and available subcommands (This is the only command all Players can see the other commands require op).
-- `/hunt top` - Opens the leaderboard view.
+- `/hunt` — Show help and available subcommands.
+- `/hunt top` - Opens the leaderboard view (This is the only command all Players can see the other commands require op).
 - `/hunt setTimer <time>` — Start the game with the provided duration (examples: `1h`, `30m`, `10m`)
 - `/hunt stopTimer` - Stops the game and limits the ability to earn points.
 - `/hunt resumeTimer` - Resumes the game and gives back the ability to earn points.
