@@ -27,6 +27,9 @@ public class PointHunt extends JavaPlugin implements Listener {
     private boolean paused = false;
     private long remainingOnPause = -1;
 
+    // Scheduled save task
+    private BukkitTask saveTask;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -39,6 +42,19 @@ public class PointHunt extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
 
         getLogger().info("RankHunt enabled!");
+
+        FileConfiguration cfg = getConfig();
+        // action bar and update interval (ticks)
+        boolean actionBarEnabled = cfg.getBoolean("settings.action-bar-enabled", true);
+        int updateIntervalTicks = Math.max(1, cfg.getInt("settings.update-interval-ticks", 1));
+
+        // periodic save interval (seconds)
+        int saveIntervalSeconds = Math.max(0, cfg.getInt("settings.save-interval-seconds", 300));
+        if (saveIntervalSeconds > 0) {
+            long periodTicks = saveIntervalSeconds * 20L;
+            saveTask = Bukkit.getScheduler().runTaskTimer(this, this::savePoints, periodTicks, periodTicks);
+            getLogger().info("PointHunt: scheduled periodic saves every " + saveIntervalSeconds + "s");
+        }
 
         // Update action bar & handle timer
         Bukkit.getScheduler().runTaskTimer(this, () -> {
@@ -69,9 +85,13 @@ public class PointHunt extends JavaPlugin implements Listener {
                             BukkitTask t = ref.get();
                             if (t != null) t.cancel();
 
+                            // Build end message and show top players
+                            int topCount = cfg.getInt("settings.end-top-count", 5);
+                            String endTitle = cfg.getString("messages.hunt-ended-title", "§cTHE POINT HUNT HAS ENDED!");
+
                             for (Player p : Bukkit.getOnlinePlayers()) {
                                 StringBuilder msg = new StringBuilder();
-                                msg.append("§cTHE POINT HUNT HAS ENDED!\n\n");
+                                msg.append(endTitle).append("\n\n");
 
                                 int playerPoints = listener.getPoints(p);
                                 int rank = 0;
@@ -84,8 +104,8 @@ public class PointHunt extends JavaPlugin implements Listener {
                                 msg.append("§7Your Points: §a").append(playerPoints)
                                         .append(" §7(Rank: §e#").append(rank).append("§7)\n\n");
 
-                                msg.append("§6§lTop 5 Players:\n");
-                                for (int i = 0; i < Math.min(5, leaderboard.size()); i++) {
+                                msg.append("§6§lTop ").append(topCount).append(" Players:\n");
+                                for (int i = 0; i < Math.min(topCount, leaderboard.size()); i++) {
                                     Map.Entry<UUID, Integer> entry = leaderboard.get(i);
                                     OfflinePlayer off = Bukkit.getOfflinePlayer(entry.getKey());
                                     String name = (off.getName() != null) ? off.getName() : "Unknown";
@@ -97,40 +117,50 @@ public class PointHunt extends JavaPlugin implements Listener {
                             }
 
                             locked = true;
-                            Bukkit.getScheduler().runTaskLater(PointHunt.this, Bukkit::shutdown, 20L);
+                            boolean shutdownOnEnd = cfg.getBoolean("settings.shutdown-on-end", true);
+                            if (shutdownOnEnd) {
+                                Bukkit.getScheduler().runTaskLater(PointHunt.this, Bukkit::shutdown, 20L);
+                            } else {
+                                // If not shutting down, just broadcast and unlock after short delay
+                                Bukkit.broadcast(Component.text("§aPoint hunt ended (server will remain online)."));
+                                locked = false;
+                                shuttingDown = false;
+                            }
                         }
                     }, 0L, 20L));
                 }
             }
 
             // action bar
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                int points = listener.getPoints(player);
+            if (actionBarEnabled) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    int points = listener.getPoints(player);
 
-                String rankText = "";
-                if (points > 0) {
-                    int rank = 0;
-                    for (int i = 0; i < leaderboard.size(); i++) {
-                        if (leaderboard.get(i).getKey().equals(player.getUniqueId())) {
-                            rank = i + 1;
-                            break;
+                    String rankText = "";
+                    if (points > 0) {
+                        int rank = 0;
+                        for (int i = 0; i < leaderboard.size(); i++) {
+                            if (leaderboard.get(i).getKey().equals(player.getUniqueId())) {
+                                rank = i + 1;
+                                break;
+                            }
                         }
+                        if (rank > 0) rankText = " §7| §eRank: §b#" + rank;
                     }
-                    if (rank > 0) rankText = " §7| §eRank: §b#" + rank;
-                }
 
-                String timerText;
-                if (paused) {
-                    timerText = "§e⏸ Paused §7| ";
-                } else {
-                    timerText = (remaining > 0) ? "§c⏳ " + formatTime(remaining) + " §7| " : "";
-                }
+                    String timerText;
+                    if (paused) {
+                        timerText = "§e⏸ Paused §7| ";
+                    } else {
+                        timerText = (remaining > 0) ? "§c⏳ " + formatTime(remaining) + " §7| " : "";
+                    }
 
-                player.sendActionBar(
-                        Component.text(timerText + "§6§lPoints: §a" + points + rankText)
-                );
+                    player.sendActionBar(
+                            Component.text(timerText + "§6§lPoints: §a" + points + rankText)
+                    );
+                }
             }
-        }, 0L, 1L);
+        }, 0L, updateIntervalTicks);
 
         // Register command
         HuntCommand huntCommand = new HuntCommand(listener, this);
@@ -151,6 +181,8 @@ public class PointHunt extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        // cancel save task if present
+        if (saveTask != null) saveTask.cancel();
         savePoints();
         getLogger().info("RankHunt disabled!");
     }
