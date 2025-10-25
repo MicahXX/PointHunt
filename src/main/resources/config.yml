@@ -1,5 +1,5 @@
 settings:
-  mappings-merge: true          # true = merge config entries into Java defaults (recommended), false = Only use the settings configured here.
+  mappings-merge: true          # true = merge config entries into Java defaults (recommended), false = Only use the settings configured here
   enable-block-points: true     # enable awarding points for breaking configured blocks
   enable-mob-points: true       # enable awarding points for killing configured mobs
   ignore-silk-touch: false      # if true, then silk-touch won't block point awarding
@@ -79,7 +79,8 @@ block-points:
   NETHER_GOLD_ORE: 1
   ANCIENT_DEBRIS: 30
 
+# End message
 messages:
   prefix: "&7[&bPointHunt&7] &r"
-  points-self: "&aYou have &e{points} &apoints."
+  points-self: "&aYou have &e{points} &apoints." 
   hunt-ended-title: "§cTHE POINT HUNT HAS ENDED!"
