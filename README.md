@@ -62,11 +62,12 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 - `/hunt resumeTimer` - Resumes the game and gives back the ability to earn points.
 - `/hunt cancelTimer` - Cancels the timer and removes it.
 - `/hunt stopTimer` - Stops the game and limits the ability to earn points.
+- `/hunt reload` - Reloads the config immediatly.
 
 ## Configuration 
 - On first run, a configuration file will be created in `plugins/PointHunt/`.
-- In Progress...
-- Edit the config and restart the server to apply changes.
+- Open it with Notepad etc and now medify things as you want.
+- To modify values etc. make a change in the config file and save it, then use the /hunt reload command ingame, now the value is saved.
 
 ## Troubleshooting
 - "No Java" or "Java not found" errors:
