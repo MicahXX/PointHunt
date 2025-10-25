@@ -1,9 +1,9 @@
 settings:
-  mappings-merge: true          # true = merge config entries into Java defaults (recommended)
+  mappings-merge: true          # true = merge config entries into Java defaults (recommended), false = Only use the settings configured here.
   enable-block-points: true     # enable awarding points for breaking configured blocks
   enable-mob-points: true       # enable awarding points for killing configured mobs
-  ignore-silk-touch: false      # if true, silk-touch won't block point awarding
-  silk-touch-message: true      # if true, show message when silk-touch prevented points
+  ignore-silk-touch: false      # if true, then silk-touch won't block point awarding
+  silk-touch-message: true      # if true it shows a message when silk-touch prevented points gained
   multiplier: 1.0               # global multiplier applied to all earned points
   action-bar-enabled: true      # show action bar updates
   update-interval-ticks: 1      # action bar and timer task interval in ticks
@@ -56,7 +56,7 @@ mob-points:
   WARDEN: 375
   ENDER_DRAGON: 500
 
-# override block/ore point values
+# override ore point values
 block-points:
   COAL_ORE: 1
   DEEPSLATE_COAL_ORE: 1
@@ -82,4 +82,3 @@ messages:
   prefix: "&7[&bPointHunt&7] &r"
   points-self: "&aYou have &e{points} &apoints."
   hunt-ended-title: "§cTHE POINT HUNT HAS ENDED!"
-# End of config
