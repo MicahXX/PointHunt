@@ -23,7 +23,6 @@ Table of contents
 - In-game leaderboard to show top players
 - Configurable match timer
 - Automatic server shutdown when the timer reaches zero
-- Lightweight and easy to run on a local Paper server
 
 ## Requirements
 - Java (See troubleshooting if you get "no Java" errors)
