@@ -1,5 +1,6 @@
 # Point Hunt
 
+[![Modrinth](https://img.shields.io/badge/Modrinth-modrinth.com-blue?style=for-the-badge)](https://modrinth.com/plugin/pointhunt)
 [![Website](https://img.shields.io/badge/Website-micahcode.com-blue?style=for-the-badge)](https://micahcode.com)
 <img src="https://img.shields.io/github/followers/MicahXX?style=for-the-badge" alt="Followers Badge"/>
 <img src="https://img.shields.io/github/stars/MicahXX/OwnWebsite?style=for-the-badge" alt="Stars Badge"/>
