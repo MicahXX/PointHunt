@@ -12,7 +12,7 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 - Installation
 - Quick start
 - Commands
-- Configuration (overview)
+- Configuration 
 - Troubleshooting
 - Contributing
 - Links
