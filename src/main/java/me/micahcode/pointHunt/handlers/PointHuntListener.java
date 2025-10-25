@@ -10,8 +10,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +28,11 @@ public class PointHuntListener implements Listener {
 
     public void setPlugin(PointHunt plugin) {
         this.plugin = plugin;
+        loadMappingsFromConfig();
     }
 
     public PointHuntListener() {
-        // Default mob points
+        // Default mob points (safe baseline for all living entities)
         for (EntityType type : EntityType.values()) {
             if (type.getEntityClass() != null && LivingEntity.class.isAssignableFrom(type.getEntityClass())) {
                 mobPoints.put(type, 1);
@@ -70,7 +72,6 @@ public class PointHuntListener implements Listener {
         mobPoints.put(EntityType.RAVAGER, 35);
         mobPoints.put(EntityType.WITHER_SKELETON, 28);
         mobPoints.put(EntityType.GHAST, 20);
-        mobPoints.put(EntityType.BREEZE, 20);
 
         // High difficulty mobs
         mobPoints.put(EntityType.PIGLIN_BRUTE, 40);
@@ -83,7 +84,7 @@ public class PointHuntListener implements Listener {
         mobPoints.put(EntityType.WARDEN, 375);
         mobPoints.put(EntityType.ENDER_DRAGON, 500);
 
-        // ores
+        // ores (defaults)
         blockPoints.put(Material.COAL_ORE, 1);
         blockPoints.put(Material.DEEPSLATE_COAL_ORE, 1);
         blockPoints.put(Material.IRON_ORE, 2);
@@ -103,6 +104,58 @@ public class PointHuntListener implements Listener {
         blockPoints.put(Material.NETHER_QUARTZ_ORE, 1);
         blockPoints.put(Material.NETHER_GOLD_ORE, 1);
         blockPoints.put(Material.ANCIENT_DEBRIS, 30);
+    }
+    private void loadMappingsFromConfig() {
+        if (plugin == null) return;
+        FileConfiguration cfg = plugin.getConfig();
+
+        boolean merge = true;
+        if (cfg.isConfigurationSection("settings")) {
+            merge = cfg.getBoolean("settings.mappings-merge", true);
+        }
+
+        // MOB POINTS
+        if (cfg.isConfigurationSection("mob-points")) {
+            ConfigurationSection section = cfg.getConfigurationSection("mob-points");
+            if (!merge) {
+                mobPoints.clear();
+            }
+            assert section != null;
+            for (String key : section.getKeys(false)) {
+                try {
+                    EntityType et = EntityType.valueOf(key.toUpperCase());
+                    int pts = section.getInt(key);
+                    mobPoints.put(et, pts);
+                } catch (IllegalArgumentException ex) {
+                    plugin.getLogger().warning("PointHunt: invalid entity type in mob-points: " + key);
+                }
+            }
+            plugin.getLogger().info("PointHunt: loaded mob-points from config (" + (merge ? "merged" : "replaced") + ")");
+        }
+
+        // BLOCK POINTS
+        if (cfg.isConfigurationSection("block-points")) {
+            ConfigurationSection section = cfg.getConfigurationSection("block-points");
+            if (!merge) {
+                blockPoints.clear();
+            }
+            assert section != null;
+            for (String key : section.getKeys(false)) {
+                try {
+                    Material mat = Material.valueOf(key.toUpperCase());
+                    int pts = section.getInt(key);
+                    blockPoints.put(mat, pts);
+                } catch (IllegalArgumentException ex) {
+                    plugin.getLogger().warning("PointHunt: invalid material in block-points: " + key);
+                }
+            }
+            plugin.getLogger().info("PointHunt: loaded block-points from config (" + (merge ? "merged" : "replaced") + ")");
+        }
+    }
+
+    // Public method to call after a reload
+    public void reloadMappingsFromConfig() {
+        loadMappingsFromConfig();
     }
 
     private String formatName(String raw) {
@@ -124,12 +177,19 @@ public class PointHuntListener implements Listener {
             return;
         }
 
+        // check global multiplier
+        double multiplier = 1.0;
+        if (plugin.getConfig().isConfigurationSection("settings")) {
+            multiplier = plugin.getConfig().getDouble("settings.multiplier", 1.0);
+        }
+        int awarded = (int) Math.round(points * multiplier);
+
         UUID id = player.getUniqueId();
         int current = playerPoints.getOrDefault(id, 0);
-        int updated = current + points;
+        int updated = current + awarded;
         playerPoints.put(id, updated);
 
-        player.sendMessage("§3" + objective + " §8» §6(§a+" + points + " pts§6)");
+        player.sendMessage("§3" + objective + " §8» §6(§a+" + awarded + " pts§6)");
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -143,16 +203,22 @@ public class PointHuntListener implements Listener {
 
         Material type = event.getBlock().getType();
 
-        // checks if Player has silktouch
-        if (player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
-            player.sendMessage(
-                    net.kyori.adventure.text.Component.text(
-                            "You don't earn points while mining with Silk Touch.",
-                            net.kyori.adventure.text.format.NamedTextColor.DARK_RED
-                    )
-            );
+        // optionally ignore silk-touch
+        boolean ignoreSilk = plugin.getConfig().getBoolean("settings.ignore-silk-touch", false);
+        if (!ignoreSilk && player.getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
+            if (plugin.getConfig().getBoolean("settings.silk-touch-message", true)) {
+                player.sendMessage(
+                        net.kyori.adventure.text.Component.text(
+                                "You don't earn points while mining with Silk Touch.",
+                                net.kyori.adventure.text.format.NamedTextColor.DARK_RED
+                        )
+                );
+            }
             return;
         }
+
+        // check if block awarding is enabled
+        if (!plugin.getConfig().getBoolean("settings.enable-block-points", true)) return;
 
         // awards points
         if (blockPoints.containsKey(type)) {
@@ -169,6 +235,9 @@ public class PointHuntListener implements Listener {
 
         if (killer == null) return;
         if (killer.getGameMode() == GameMode.CREATIVE) return;
+
+        // check if mob awarding is enabled
+        if (!plugin.getConfig().getBoolean("settings.enable-mob-points", true)) return;
 
         EntityType type = event.getEntityType();
         int points = mobPoints.getOrDefault(type, 1);
