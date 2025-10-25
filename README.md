@@ -39,8 +39,7 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
    - If you prefer to keep your existing startup script, simply replace the jar filename with the Paper jar name.
 4. Run the generated .bat/.sh file once to generate the server folders and accept the EULA:
    - Accept EULA: edit eula.txt and set `eula=true`
-5. Stop the server (type stop in the console), then:
-   - Create a `plugins/` folder if it doesn't exist.
+5. Run the server again, then wait, then type stop in the console and then:
    - Put the Point Hunt `.jar` into the `plugins/` folder.
 6. Start the server again.
 7. Join locally: Multiplayer → Direct Connection → `localhost`
