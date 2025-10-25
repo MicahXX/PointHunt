@@ -11,11 +11,11 @@ settings:
   shutdown-on-end: true         # default
   end-top-count: 5              # how many top players to show at match end
 
-
 timer:
-  default-duration: "30m"       # I dont think this works
-
-points: {}                      # shows Points of users (UUID)
+  default-duration: "30m" # I dont think this works
+  
+# shows Points of users (UUID)
+points: {} 
 
 # override or add mob point values
 mob-points:
