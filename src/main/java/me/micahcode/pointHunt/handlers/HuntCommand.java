@@ -1,4 +1,5 @@
 package me.micahcode.pointHunt.handlers;
+import me.micahcode.pointHunt.util.Msg;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -36,8 +37,8 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
 
             int points = listener.getPoints(player);
 
-            player.sendMessage(Component.text("§6§lRank Hunt"));
-            player.sendMessage(Component.text("§7You currently have §a" + points + " §7points!"));
+            player.sendMessage(Msg.c("§6§lRank Hunt"));
+            player.sendMessage(Msg.c("§7You currently have §a" + points + " §7points!"));
 
             sendActionBar(player, "§6§lPoints: §a" + points);
             return true;
@@ -82,7 +83,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
 
             // Update in-memory
             listener.getAllPoints().put(target.getUniqueId(), points);
-            plugin.getConfig().set("points." + target.getUniqueId().toString(), points);
+            plugin.getConfig().set("points." + target.getUniqueId(), points);
             plugin.saveConfig();
 
             sender.sendMessage(Component.text("§aSet " + (target.getName() != null ? target.getName() : target.getUniqueId().toString()) + "’s points to §e" + points + "§a!"));
@@ -206,7 +207,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendActionBar(Player player, String message) {
-        player.sendActionBar(Component.text(message));
+        player.sendActionBar(Msg.c(message));
     }
 
     // /top command
@@ -224,8 +225,11 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
 
         int startIndex = (page - 1) * pageSize;
 
-        Inventory gui = Bukkit.createInventory(null, 54,
-                Component.text("§6Point Hunt (Page " + page + "/" + totalPages + ")"));
+        Inventory gui = Bukkit.createInventory(
+                null,
+                54,
+                Msg.c("§6Point Hunt (Page " + page + "/" + totalPages + ")")
+        );
 
         int slot = 0;
         for (int i = startIndex; i < Math.min(startIndex + pageSize, allEntries.size()); i++) {
@@ -237,8 +241,8 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
             SkullMeta meta = (SkullMeta) head.getItemMeta();
             if (meta != null) {
                 meta.setOwningPlayer(offlinePlayer);
-                meta.displayName(Component.text("§b" + name + " §7(#" + (i + 1) + ")"));
-                meta.lore(List.of(Component.text("§7Points: §a" + entry.getValue())));
+                meta.displayName(Msg.c("§b" + name + " §7(#" + (i + 1) + ")"));
+                meta.lore(List.of(Msg.c("§7Points: §a" + entry.getValue())));
                 head.setItemMeta(meta);
             }
             gui.setItem(slot, head);
@@ -249,7 +253,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
         if (page > 1) {
             ItemStack prev = new ItemStack(Material.ARROW);
             var meta = prev.getItemMeta();
-            meta.displayName(Component.text("§a◀ Previous Page"));
+            meta.displayName(Msg.c("§a◀ Previous Page"));
             prev.setItemMeta(meta);
             gui.setItem(45, prev);
         }
@@ -257,7 +261,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
         // Close Button
         ItemStack close = new ItemStack(Material.BARRIER);
         var closeMeta = close.getItemMeta();
-        closeMeta.displayName(Component.text("§cClose"));
+        closeMeta.displayName(Msg.c("§cClose"));
         close.setItemMeta(closeMeta);
         gui.setItem(49, close);
 
@@ -265,7 +269,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
         if (page < totalPages) {
             ItemStack next = new ItemStack(Material.ARROW);
             var meta = next.getItemMeta();
-            meta.displayName(Component.text("§aNext Page ▶"));
+            meta.displayName(Msg.c("§aNext Page ▶"));
             next.setItemMeta(meta);
             gui.setItem(53, next);
         }

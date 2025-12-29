@@ -19,14 +19,16 @@ public class LeaderboardGUI implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player player)) return;
 
-        String title = PlainTextComponentSerializer.plainText().serialize(event.getView().title());
-        if (!title.startsWith("§6Point Hunt")) return;
+        String title = PlainTextComponentSerializer.plainText()
+                .serialize(event.getView().title());
 
-        // Always cancel GUI interactions
+        if (!title.startsWith("Point Hunt")) return;
+
         event.setCancelled(true);
 
-        // blocks shift-clicking, hotkey swapping and dragging
-        if (event.isShiftClick() || event.getClick().isKeyboardClick() || event.getClick().isCreativeAction()) {
+        if (event.isShiftClick()
+                || event.getClick().isKeyboardClick()
+                || event.getClick().isCreativeAction()) {
             return;
         }
 
@@ -52,8 +54,10 @@ public class LeaderboardGUI implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        String title = PlainTextComponentSerializer.plainText().serialize(event.getView().title());
-        if (title.startsWith("§6Point Hunt")) {
+        String title = PlainTextComponentSerializer.plainText()
+                .serialize(event.getView().title());
+
+        if (title.startsWith("Point Hunt")) {
             event.setCancelled(true);
         }
     }

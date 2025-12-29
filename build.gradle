@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.micahcode'
-version = '2.0'
+version = '2.1'
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ dependencies {
 
 tasks {
     runServer {
-        minecraftVersion("1.21")
+        minecraftVersion("1.21.8")
     }
 }
 

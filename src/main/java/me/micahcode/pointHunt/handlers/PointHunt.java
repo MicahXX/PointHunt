@@ -1,4 +1,5 @@
 package me.micahcode.pointHunt.handlers;
+import me.micahcode.pointHunt.util.Msg;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -68,7 +69,7 @@ public class PointHunt extends JavaPlugin implements Listener {
             if (remaining > 0 && !paused) {
                 if ((remaining == 3600 || remaining == 600 || remaining == 60) && !announced.contains(remaining)) {
                     announced.add(remaining);
-                    Bukkit.broadcast(Component.text("§6⏳ The point hunt ends in §e" + formatTime(remaining) + "§6!"));
+                    Bukkit.broadcast(Msg.c("§6⏳ The point hunt ends in §e" + formatTime(remaining) + "§6!"));
                 }
 
                 if (remaining == 5 && !shuttingDown) {
@@ -79,7 +80,7 @@ public class PointHunt extends JavaPlugin implements Listener {
                     AtomicReference<BukkitTask> ref = new AtomicReference<>();
                     ref.set(Bukkit.getScheduler().runTaskTimer(this, () -> {
                         if (countdown[0] > 0) {
-                            Bukkit.broadcast(Component.text("§cServer closing in §e" + countdown[0] + "§c..."));
+                            Bukkit.broadcast(Msg.c("§cServer closing in §e" + countdown[0] + "§c..."));
                             countdown[0]--;
                         } else {
                             BukkitTask t = ref.get();
@@ -113,7 +114,7 @@ public class PointHunt extends JavaPlugin implements Listener {
                                             .append(" §7- §a").append(entry.getValue()).append(" pts\n");
                                 }
 
-                                p.kick(Component.text(msg.toString()));
+                                p.kick(Msg.c(msg.toString()));
                             }
 
                             locked = true;
@@ -122,7 +123,7 @@ public class PointHunt extends JavaPlugin implements Listener {
                                 Bukkit.getScheduler().runTaskLater(PointHunt.this, Bukkit::shutdown, 20L);
                             } else {
                                 // If not shutting down, just broadcast and unlock after short delay
-                                Bukkit.broadcast(Component.text("§aPoint hunt ended (server will remain online)."));
+                                Bukkit.broadcast(Msg.c("§aPoint hunt ended (server will remain online)."));
                                 locked = false;
                                 shuttingDown = false;
                             }
@@ -156,7 +157,7 @@ public class PointHunt extends JavaPlugin implements Listener {
                     }
 
                     player.sendActionBar(
-                            Component.text(timerText + "§6§lPoints: §a" + points + rankText)
+                            Msg.c(timerText + "§6§lPoints: §a" + points + rankText)
                     );
                 }
             }
@@ -175,7 +176,7 @@ public class PointHunt extends JavaPlugin implements Listener {
     public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (locked) {
-            player.kick(Component.text("§cThe Rank Hunt has ended!"));
+            player.kick(Msg.c("§cThe Rank Hunt has ended!"));
         }
     }
 

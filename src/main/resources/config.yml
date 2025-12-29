@@ -82,4 +82,3 @@ messages:
   prefix: "&7[&bPointHunt&7] &r"
   points-self: "&aYou have &e{points} &apoints."
   hunt-ended-title: "§cTHE POINT HUNT HAS ENDED!"
-# End of config
