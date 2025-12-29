@@ -22,7 +22,7 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 ## Features
 - Earn points by mining blocks and killing mobs
 - In-game leaderboard to show top players
-- Configurable match timer
+- Configurable settings like Points gained
 - Automatic server shutdown when the timer reaches zero
 
 ## Requirements
@@ -39,8 +39,7 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
    - If you prefer to keep your existing startup script, simply replace the jar filename with the Paper jar name.
 4. Run the generated .bat/.sh file once to generate the server folders and accept the EULA:
    - Accept EULA: edit eula.txt and set `eula=true`
-5. Stop the server (type stop in the console), then:
-   - Create a `plugins/` folder if it doesn't exist.
+5. Run the server again, then wait, then type stop in the console and then:
    - Put the Point Hunt `.jar` into the `plugins/` folder.
 6. Start the server again.
 7. Join locally: Multiplayer → Direct Connection → `localhost`
@@ -55,18 +54,20 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 - The game will track points while the timer runs, show leaderboard entries, and shut down the server when time runs out.
 
 ## Commands
-- `/hunt` — Show help and available subcommands (This is the only command all Players can see the other commands require op).
-- `/hunt top` - Opens the leaderboard view.
+- `/hunt` — Show help and available subcommands.
+- `/hunt top` - Opens the leaderboard view (This is the only command all Players can see the other commands require op).
 - `/hunt setTimer <time>` — Start the game with the provided duration (examples: `1h`, `30m`, `10m`)
 - `/hunt stopTimer` - Stops the game and limits the ability to earn points.
 - `/hunt resumeTimer` - Resumes the game and gives back the ability to earn points.
 - `/hunt cancelTimer` - Cancels the timer and removes it.
-- `/hunt stopTimer` - Stops the game and limits the ability to earn points.
+- `/hunt setPoints <MinecraftName> <Amount>` - Set the Points of a Player.
+- `/hunt resetPoints` - Reset the Points of all Players to 0.
+- `/hunt reload` - Reloads the config immediatly.
 
 ## Configuration 
 - On first run, a configuration file will be created in `plugins/PointHunt/`.
-- In Progress...
-- Edit the config and restart the server to apply changes.
+- Open it with Notepad etc and now medify things as you want.
+- To modify values etc. make a change in the config file and save it, then use the /hunt reload command ingame, now the value is saved.
 
 ## Troubleshooting
 - "No Java" or "Java not found" errors:
