@@ -26,11 +26,7 @@ public class LeaderboardGUI implements Listener {
 
         event.setCancelled(true);
 
-        if (event.isShiftClick()
-                || event.getClick().isKeyboardClick()
-                || event.getClick().isCreativeAction()) {
-            return;
-        }
+        if (event.isShiftClick() || event.getClick().isKeyboardClick() || event.getClick().isCreativeAction()) return;
 
         int slot = event.getRawSlot();
 
@@ -43,12 +39,10 @@ public class LeaderboardGUI implements Listener {
             }
         } catch (Exception ignored) {}
 
-        if (slot == 45) {
-            huntCommand.openLeaderboard(player, currentPage - 1);
-        } else if (slot == 53) {
-            huntCommand.openLeaderboard(player, currentPage + 1);
-        } else if (slot == 49) {
-            player.closeInventory();
+        switch (slot) {
+            case 45 -> huntCommand.openLeaderboard(player, currentPage - 1);
+            case 53 -> huntCommand.openLeaderboard(player, currentPage + 1);
+            case 49 -> player.closeInventory();
         }
     }
 
