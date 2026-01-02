@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/github/followers/MicahXX?style=for-the-badge" alt="Followers Badge"/>
 <img src="https://img.shields.io/github/stars/MicahXX/OwnWebsite?style=for-the-badge" alt="Stars Badge"/>
 
-A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills into a points-based minigame. Features a configurable timer, leaderboard, and automatic server shutdown when the game ends.
+A small, fun Minecraft Paper plugin (1.21.x) that turns mining and mob kills into a points-based minigame. Features a configurable timer, leaderboard, and automatic server shutdown when the game ends.
 
 ## Table of contents
 - Features
