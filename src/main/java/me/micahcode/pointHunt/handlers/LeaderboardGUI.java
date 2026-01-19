@@ -17,18 +17,15 @@ public class LeaderboardGUI implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player)) return;
-
         String title = PlainTextComponentSerializer.plainText()
                 .serialize(event.getView().title());
 
+        if (title.startsWith("Point Hunt")) {
+            event.setCancelled(true);
+        }
+        if (!(event.getWhoClicked() instanceof Player player)) return;
         if (!title.startsWith("Point Hunt")) return;
-
-        event.setCancelled(true);
-
         if (event.isShiftClick() || event.getClick().isKeyboardClick() || event.getClick().isCreativeAction()) return;
-
-        int slot = event.getRawSlot();
 
         int currentPage = 1;
         try {
@@ -39,6 +36,7 @@ public class LeaderboardGUI implements Listener {
             }
         } catch (Exception ignored) {}
 
+        int slot = event.getRawSlot();
         switch (slot) {
             case 45 -> huntCommand.openLeaderboard(player, currentPage - 1);
             case 53 -> huntCommand.openLeaderboard(player, currentPage + 1);
@@ -48,9 +46,7 @@ public class LeaderboardGUI implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        String title = PlainTextComponentSerializer.plainText()
-                .serialize(event.getView().title());
-
+        String title = PlainTextComponentSerializer.plainText().serialize(event.getView().title());
         if (title.startsWith("Point Hunt")) {
             event.setCancelled(true);
         }

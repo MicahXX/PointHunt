@@ -32,14 +32,14 @@ public class PointHuntListener implements Listener {
     }
 
     public PointHuntListener() {
-        // Default mob points (safe baseline for all living entities)
+        // Default mob points for not mobs which have no applied value
         for (EntityType type : EntityType.values()) {
             if (type.getEntityClass() != null && LivingEntity.class.isAssignableFrom(type.getEntityClass())) {
                 mobPoints.put(type, 1);
             }
         }
 
-        // easy mobs
+        // Easy difficulty mobs
         mobPoints.put(EntityType.ZOMBIE, 2);
         mobPoints.put(EntityType.ZOMBIE_VILLAGER, 3);
         mobPoints.put(EntityType.HUSK, 3);
@@ -56,7 +56,7 @@ public class PointHuntListener implements Listener {
         mobPoints.put(EntityType.SKELETON_HORSE, 2);
         mobPoints.put(EntityType.ZOMBIFIED_PIGLIN, 3);
 
-        // Mid difficulty
+        // Mid difficulty mobs
         mobPoints.put(EntityType.CREEPER, 6);
         mobPoints.put(EntityType.ENDERMAN, 15);
         mobPoints.put(EntityType.BLAZE, 15);
@@ -84,7 +84,7 @@ public class PointHuntListener implements Listener {
         mobPoints.put(EntityType.WARDEN, 375);
         mobPoints.put(EntityType.ENDER_DRAGON, 500);
 
-        // ores (defaults)
+        // ores
         blockPoints.put(Material.COAL_ORE, 1);
         blockPoints.put(Material.DEEPSLATE_COAL_ORE, 1);
         blockPoints.put(Material.IRON_ORE, 2);
@@ -114,7 +114,6 @@ public class PointHuntListener implements Listener {
             merge = cfg.getBoolean("settings.mappings-merge", true);
         }
 
-        // MOB POINTS
         if (cfg.isConfigurationSection("mob-points")) {
             ConfigurationSection section = cfg.getConfigurationSection("mob-points");
             if (!merge) {
@@ -133,7 +132,6 @@ public class PointHuntListener implements Listener {
             plugin.getLogger().info("PointHunt: loaded mob-points from config (" + (merge ? "merged" : "replaced") + ")");
         }
 
-        // BLOCK POINTS
         if (cfg.isConfigurationSection("block-points")) {
             ConfigurationSection section = cfg.getConfigurationSection("block-points");
             if (!merge) {
@@ -153,7 +151,7 @@ public class PointHuntListener implements Listener {
         }
     }
 
-    // Public method to call after a reload
+    // Method to call after a reload
     public void reloadMappingsFromConfig() {
         loadMappingsFromConfig();
     }
@@ -235,8 +233,6 @@ public class PointHuntListener implements Listener {
 
         if (killer == null) return;
         if (killer.getGameMode() == GameMode.CREATIVE) return;
-
-        // check if mob awarding is enabled
         if (!plugin.getConfig().getBoolean("settings.enable-mob-points", true)) return;
 
         EntityType type = event.getEntityType();

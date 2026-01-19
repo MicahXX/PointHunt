@@ -8,8 +8,6 @@ public final class Msg {
     private static final LegacyComponentSerializer LEGACY =
             LegacyComponentSerializer.legacySection();
 
-    private Msg() {}
-
     public static Component c(String text) {
         return LEGACY.deserialize(text);
     }

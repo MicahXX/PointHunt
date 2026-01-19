@@ -1,7 +1,6 @@
 package me.micahcode.pointHunt.handlers;
 import me.micahcode.pointHunt.util.Msg;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -28,7 +27,6 @@ public class PointHunt extends JavaPlugin implements Listener {
     private boolean paused = false;
     private long remainingOnPause = -1;
 
-    // Scheduled save task
     private BukkitTask saveTask;
 
     @Override
@@ -45,7 +43,7 @@ public class PointHunt extends JavaPlugin implements Listener {
         getLogger().info("RankHunt enabled!");
 
         FileConfiguration cfg = getConfig();
-        // action bar and update interval (ticks)
+        // action bar and update interval
         boolean actionBarEnabled = cfg.getBoolean("settings.action-bar-enabled", true);
         int updateIntervalTicks = Math.max(1, cfg.getInt("settings.update-interval-ticks", 1));
 
@@ -65,7 +63,6 @@ public class PointHunt extends JavaPlugin implements Listener {
                     .toList();
 
             long remaining = getRemainingSeconds();
-
             if (remaining > 0 && !paused) {
                 if ((remaining == 3600 || remaining == 600 || remaining == 60) && !announced.contains(remaining)) {
                     announced.add(remaining);
@@ -122,7 +119,6 @@ public class PointHunt extends JavaPlugin implements Listener {
                             if (shutdownOnEnd) {
                                 Bukkit.getScheduler().runTaskLater(PointHunt.this, Bukkit::shutdown, 20L);
                             } else {
-                                // If not shutting down, just broadcast and unlock after short delay
                                 Bukkit.broadcast(Msg.c("§aPoint hunt ended (server will remain online)."));
                                 locked = false;
                                 shuttingDown = false;
@@ -163,12 +159,10 @@ public class PointHunt extends JavaPlugin implements Listener {
             }
         }, 0L, updateIntervalTicks);
 
-        // Register command
         HuntCommand huntCommand = new HuntCommand(listener, this);
         Objects.requireNonNull(this.getCommand("hunt")).setExecutor(huntCommand);
         Objects.requireNonNull(this.getCommand("hunt")).setTabCompleter(huntCommand);
 
-        // GUI listener leaderboard pages
         getServer().getPluginManager().registerEvents(new LeaderboardGUI(huntCommand), this);
     }
 
@@ -182,7 +176,6 @@ public class PointHunt extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        // cancel save task if present
         if (saveTask != null) saveTask.cancel();
         savePoints();
         getLogger().info("RankHunt disabled!");

@@ -136,7 +136,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
 
             plugin.setTimerSeconds(seconds);
             sender.sendMessage(Component.text("§aTimer set for §e" + plugin.formatTime(seconds) + "§a!"));
-            Bukkit.broadcast(Component.text("§6⏳ The Rank Hunt will end in §e" + plugin.formatTime(seconds) + "§6!"));
+            Bukkit.broadcast(Component.text("§6⏳ The Point Hunt will end in §e" + plugin.formatTime(seconds) + "§6!"));
             return true;
         }
 
@@ -176,7 +176,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§cYou don't have permission to reload the configuration!");
                 return true;
             }
-            // Reload config from disk and reapply mappings
+
             plugin.reloadConfig();
             listener.reloadMappingsFromConfig();
             sender.sendMessage(Component.text("§aPointHunt configuration reloaded."));
@@ -191,6 +191,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (args.length == 1) {
             List<String> subs = new ArrayList<>();
+
             subs.add("top");
             if (sender.hasPermission("pointhunt.setPoints")) subs.add("setPoints");
             if (sender.hasPermission("pointhunt.resetPoints")) subs.add("resetPoints");
@@ -212,18 +213,15 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
 
     // /top command
     public void openLeaderboard(Player player, int page) {
-        int pageSize = 45;
         List<Map.Entry<UUID, Integer>> allEntries = listener.getAllPoints().entrySet().stream()
                 .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
                 .toList();
 
+        int pageSize = 45;
         int totalPages = (int) Math.ceil(allEntries.size() / (double) pageSize);
         if (totalPages == 0) totalPages = 1;
-
         if (page < 1) page = 1;
         if (page > totalPages) page = totalPages;
-
-        int startIndex = (page - 1) * pageSize;
 
         Inventory gui = Bukkit.createInventory(
                 null,
@@ -231,6 +229,7 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
                 Msg.c("§6Point Hunt (Page " + page + "/" + totalPages + ")")
         );
 
+        int startIndex = (page - 1) * pageSize;
         int slot = 0;
         for (int i = startIndex; i < Math.min(startIndex + pageSize, allEntries.size()); i++) {
             Map.Entry<UUID, Integer> entry = allEntries.get(i);
@@ -249,6 +248,15 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
             slot++;
         }
 
+        // Next Page
+        if (page < totalPages) {
+            ItemStack next = new ItemStack(Material.ARROW);
+            var meta = next.getItemMeta();
+            meta.displayName(Msg.c("§aNext Page ▶"));
+            next.setItemMeta(meta);
+            gui.setItem(53, next);
+        }
+
         // Previous Page
         if (page > 1) {
             ItemStack prev = new ItemStack(Material.ARROW);
@@ -264,15 +272,6 @@ public class HuntCommand implements CommandExecutor, TabCompleter {
         closeMeta.displayName(Msg.c("§cClose"));
         close.setItemMeta(closeMeta);
         gui.setItem(49, close);
-
-        // Next Page
-        if (page < totalPages) {
-            ItemStack next = new ItemStack(Material.ARROW);
-            var meta = next.getItemMeta();
-            meta.displayName(Msg.c("§aNext Page ▶"));
-            next.setItemMeta(meta);
-            gui.setItem(53, next);
-        }
 
         player.openInventory(gui);
     }
