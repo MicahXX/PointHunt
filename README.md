@@ -5,7 +5,7 @@
 <img src="https://img.shields.io/github/followers/MicahXX?style=for-the-badge" alt="Followers Badge"/>
 <img src="https://img.shields.io/github/stars/MicahXX/OwnWebsite?style=for-the-badge" alt="Stars Badge"/>
 
-A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills into a points-based minigame. Features a configurable timer, leaderboard, and automatic server shutdown when the game ends.
+A small, fun Minecraft Paper plugin (1.21.x) that turns mining and mob kills into a points-based minigame. Features a configurable timer, leaderboard, and automatic server shutdown when the game ends.
 
 ## Table of contents
 - Features
@@ -27,15 +27,15 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 
 ## Requirements
 - Java (See troubleshooting if you get "no Java" errors)
-- PaperMC server: Paper 1.21.8
+- PaperMC server: Paper 1.21.8 (works as long as its 1.21.x)
   - Download: https://papermc.io/downloads/paper
 
 ## Installation
-1. Download Paper 1.21.8 from the PaperMC website.
+1. Download Paper 1.21.8 (1.21.x) from the PaperMC website.
 2. Download the Point Hunt plugin .jar file (from Releases, Modrinth, or your chosen distribution).
 3. Place the Paper jar and a startup script in the same folder (example startup script generation: https://docs.papermc.io/misc/tools/start-script-gen).
    - Example Java line (adjust memory and jar name as needed):
-     java -Xms2G -Xmx2G -jar paper-1.21.8-60.jar nogui
+     java -Xms2G -Xmx2G -jar paper-1.21.8-60.jar nogui 
    - If you prefer to keep your existing startup script, simply replace the jar filename with the Paper jar name.
 4. Run the generated .bat/.sh file once to generate the server folders and accept the EULA:
    - Accept EULA: edit eula.txt and set `eula=true`
@@ -66,7 +66,7 @@ A small, fun Minecraft Paper plugin (1.21.8) that turns mining and mob kills int
 
 ## Configuration 
 - On first run, a configuration file will be created in `plugins/PointHunt/`.
-- Open it with Notepad etc and now medify things as you want.
+- Open it with Notepad etc and now modify things as you want.
 - To modify values etc. make a change in the config file and save it, then use the /hunt reload command ingame, now the value is saved.
 
 ## Troubleshooting
