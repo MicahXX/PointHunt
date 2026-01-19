@@ -66,7 +66,7 @@ A small, fun Minecraft Paper plugin (1.21.x) that turns mining and mob kills int
 
 ## Configuration 
 - On first run, a configuration file will be created in `plugins/PointHunt/`.
-- Open it with Notepad etc and now medify things as you want.
+- Open it with Notepad etc and now modify things as you want.
 - To modify values etc. make a change in the config file and save it, then use the /hunt reload command ingame, now the value is saved.
 
 ## Troubleshooting
