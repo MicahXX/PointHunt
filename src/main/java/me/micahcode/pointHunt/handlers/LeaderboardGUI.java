@@ -20,9 +20,7 @@ public class LeaderboardGUI implements Listener {
         String title = PlainTextComponentSerializer.plainText()
                 .serialize(event.getView().title());
 
-        if (title.startsWith("Point Hunt")) {
-            event.setCancelled(true);
-        }
+        if (title.startsWith("Point Hunt")) event.setCancelled(true);
         if (!(event.getWhoClicked() instanceof Player player)) return;
         if (!title.startsWith("Point Hunt")) return;
         if (event.isShiftClick() || event.getClick().isKeyboardClick() || event.getClick().isCreativeAction()) return;
